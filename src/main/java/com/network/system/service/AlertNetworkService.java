@@ -5,6 +5,7 @@ import com.network.system.interfaces.AlertNetwork;
 import com.network.system.model.Graph;
 import com.network.system.model.Node;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -21,14 +22,23 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public List<String> findAlertPropagationPath(String source, String target) {
-    Queue<Node> queue = new ArrayDeque<>();
-    queue.add(new Node(source));
+    List<String> alertPropagationPath = new ArrayList<>();
+    Stack<Node> stack = new Stack<>();
+    stack.add(new Node(source));
 
     Node currentNode;
-    while (!queue.isEmpty()) {
-      currentNode = queue.remove();
-
-      // TODO
+    while (!stack.isEmpty()) {
+      currentNode = stack.pop();
+      alertPropagationPath.add(currentNode.getName());
+      if (currentNode.getName().equals(target)) {
+        return alertPropagationPath;
+      } else {
+        List<String> dependencies = getDependencies(currentNode.getName());
+        dependencies.removeIf(
+            dependency ->
+                !(dependency.equals(target) || getAffectedServices(dependency).contains(target)));
+        stack.addAll(dependencies.stream().map(Node::new).toList());
+      }
     }
 
     return List.of();
@@ -42,7 +52,9 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public List<String> getDependencies(String service) {
-    return alertNetworkSystem.getAdjacentNodes(service).stream().map(Node::getName).toList();
+    return alertNetworkSystem.getAdjacentNodes(service).stream()
+        .map(Node::getName)
+        .collect(Collectors.toList());
   }
 
   private void getAffectedChildrenServices(

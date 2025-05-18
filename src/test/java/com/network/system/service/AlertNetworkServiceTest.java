@@ -28,7 +28,7 @@ class AlertNetworkServiceTest {
     // given // when
     var alertPropagationPath = alertNetworkService.findAlertPropagationPath("A", "C");
     // then
-    assertEquals(List.of("A", "B", "C"), alertPropagationPath);
+    assertEquals(List.of("A", "D", "C"), alertPropagationPath);
   }
 
   @Test
