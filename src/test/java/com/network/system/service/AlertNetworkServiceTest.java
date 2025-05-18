@@ -1,9 +1,7 @@
 package com.network.system.service;
 
 import static com.network.system.exception.ErrorMessages.NOT_EXIST;
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.network.system.exception.NotFoundException;
 import java.util.Collections;

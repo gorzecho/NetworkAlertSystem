@@ -4,11 +4,14 @@ import ch.qos.logback.core.joran.sanity.Pair;
 import com.network.system.interfaces.AlertNetwork;
 import com.network.system.model.Graph;
 import com.network.system.model.Node;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
-import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 public class AlertNetworkService implements AlertNetwork {
 
   private final Graph alertNetworkSystem = new Graph();
@@ -45,7 +48,7 @@ public class AlertNetworkService implements AlertNetwork {
       }
     }
 
-    return List.of();
+    return Collections.emptyList();
   }
 
   public List<String> getAffectedServices(String source) {
@@ -73,6 +76,6 @@ public class AlertNetworkService implements AlertNetwork {
   public List<Pair<String, String>> suggestContainmentEdges(String source) {
     alertNetworkSystem.validateNodeExists(source);
 
-    return List.of();
+    return Collections.emptyList();
   }
 }
