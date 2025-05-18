@@ -1,7 +1,11 @@
 package com.network.system.service;
 
+import static com.network.system.exception.ErrorMessages.NOT_EXIST;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.network.system.exception.NotFoundException;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +28,7 @@ class AlertNetworkServiceTest {
   }
 
   @Test
-  public void findAlertPropagationPathShouldReturnValidPath() {
+  public void findAlertPropagationPathShouldReturnValidPathBetweenTwoServices() {
     // given // when
     var alertPropagationPath = alertNetworkService.findAlertPropagationPath("A", "C");
     // then
@@ -32,11 +36,27 @@ class AlertNetworkServiceTest {
   }
 
   @Test
-  public void findAlertPropagationPathShouldReturnEmptyListWhenThereIsNoPathBetweenTwoSystems() {
+  public void findAlertPropagationPathShouldReturnEmptyListWhenThereIsNoPathBetweenTwoServices() {
     // given // when
     var alertPropagationPath = alertNetworkService.findAlertPropagationPath("B", "D");
     // then
     assertEquals(Collections.emptyList(), alertPropagationPath);
+  }
+
+  @Test
+  void findAlertPropagationPathShouldThrowNotFoundExceptionWhenInvalidService() {
+    // given
+    var invalidService = "X";
+    String expectedMessage = NOT_EXIST.formatted(invalidService);
+    // when // then
+    Exception exception =
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              alertNetworkService.findAlertPropagationPath(invalidService, "C");
+            });
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains(expectedMessage));
   }
 
   @Test
@@ -53,6 +73,22 @@ class AlertNetworkServiceTest {
     var affectedServices = alertNetworkService.getAffectedServices("C");
     // then
     assertEquals(List.of(), affectedServices);
+  }
+
+  @Test
+  void getAffectedServicesShouldThrowNotFoundExceptionWhenInvalidService() {
+    // given
+    var invalidService = "X";
+    String expectedMessage = NOT_EXIST.formatted(invalidService);
+    // when // then
+    Exception exception =
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              alertNetworkService.getAffectedServices(invalidService);
+            });
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains(expectedMessage));
   }
 
   @Test

@@ -18,10 +18,14 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public void addDependency(String fromService, String toService) {
+    alertNetworkSystem.validateNodeExists(fromService);
+    alertNetworkSystem.validateNodeExists(toService);
     alertNetworkSystem.addEdge(fromService, toService);
   }
 
   public List<String> findAlertPropagationPath(String source, String target) {
+    alertNetworkSystem.validateNodeExists(source);
+    alertNetworkSystem.validateNodeExists(target);
     List<String> alertPropagationPath = new ArrayList<>();
     Stack<Node> stack = new Stack<>();
     stack.add(new Node(source));
@@ -45,6 +49,7 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public List<String> getAffectedServices(String source) {
+    alertNetworkSystem.validateNodeExists(source);
     Set<String> affectedServices = new HashSet<>();
     List<String> dependencies = getDependencies(source);
     getAffectedChildrenServices(dependencies, affectedServices);
@@ -52,6 +57,7 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public List<String> getDependencies(String service) {
+    alertNetworkSystem.validateNodeExists(service);
     return alertNetworkSystem.getAdjacentNodes(service).stream()
         .map(Node::getName)
         .collect(Collectors.toList());
@@ -65,6 +71,8 @@ public class AlertNetworkService implements AlertNetwork {
   }
 
   public List<Pair<String, String>> suggestContainmentEdges(String source) {
+    alertNetworkSystem.validateNodeExists(source);
+
     return List.of();
   }
 }

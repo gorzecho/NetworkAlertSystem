@@ -1,8 +1,10 @@
 package com.network.system.model;
 
+import static com.network.system.exception.ErrorMessages.NOT_EXIST;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import com.network.system.exception.NotFoundException;
 import java.util.*;
 
 public class Graph {
@@ -28,16 +30,14 @@ public class Graph {
     Node node1 = new Node(name1);
     Node node2 = new Node(name2);
     var adjacentNodes1 = adjacentNodes.get(node1);
-    //    var adjacentNodes2 = adjacentNodes.get(node2);
-    validateNodeExists(name1, adjacentNodes1);
-    //    validateNodeExists(name2, adjacentNodes2);
+    validateNodeExists(name1);
+    validateNodeExists(name2);
     adjacentNodes1.add(node2);
-    //    adjacentNodes2.add(node1);
   }
 
-  private static void validateNodeExists(String name, List<Node> adjacentNodes) {
-    if (isNull(adjacentNodes)) {
-      throw new IllegalArgumentException("Node %s does not exist".formatted(name));
+  public void validateNodeExists(String name) {
+    if (isNull(adjacentNodes.get(new Node(name)))) {
+      throw new NotFoundException(NOT_EXIST.formatted(name));
     }
   }
 
