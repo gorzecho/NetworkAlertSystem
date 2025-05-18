@@ -40,13 +40,14 @@ class ReconstructOrderedListTest {
       return Collections.emptyList();
     }
     List<String> reconstructedList = new ArrayList<>();
-    reconstructedList.add(pairs.get(0).get(0));
-    String target = hasNextValue(pairs.get(0)) ? pairs.get(0).get(1) : null;
-    while (target != null) {
+    List<String> firstPair = pairs.get(0);
+    reconstructedList.add(firstPair.get(0));
+    String nextValue = hasNextValue(firstPair) ? firstPair.get(1) : null;
+    while (nextValue != null) {
       for (var pair : pairs) {
-        if (pair.get(0).equals(target)) {
+        if (pair.get(0).equals(nextValue)) {
           reconstructedList.add(pair.get(0));
-          target = hasNextValue(pair) ? pair.get(1) : null;
+          nextValue = hasNextValue(pair) ? pair.get(1) : null;
         }
       }
     }
